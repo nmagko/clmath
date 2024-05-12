@@ -1,42 +1,46 @@
-Package: src/e/clmath-main/
+## CLMATH
 
-Name: CLMATH
+**Package:** src/e/clmath-main/
 
-Brief:
+**Name:** CLMATH
+
+**Author(s):** Gerald Roylance
+
+**Adapted for:** SBCL 2.4.4
+
+**Maintainer:** Victor C
+
+### Brief:
 
    Common Lisp Library for Mathematical Functions by Gerald Roylance,
    adapted to work with modern SBCL versions.
 
-Author(s): Gerald Roylance
-
-Adapted for: SBCL 2.4.4
-
-Important:
+### Important:
 
    Gerald Roylance holds the copyright of the original. Packaged file by
    Scott Brown.
 
-Changes:
+### Changes:
 
-   ./functions/gamma.lisp: double-float compatibility for new SBCL
+   **./functions/gamma.lisp:** double-float compatibility for new SBCL
    versions
 
-Adaptations:
+### Adaptations:
 
-   ./quad-ga.lisp: Gaussian Quadrature with Legendre polynomials by
+   **./quad-ga.lisp:** Gaussian Quadrature with Legendre polynomials by
    Richard Fateman.
 
-Implementations:
+### Implementations:
 
-   ./gnuplot.lisp: Common Lisp GNUPLOT Interface by Victor C
+   **./gnuplot.lisp:** Common Lisp GNUPLOT Interface by Victor C
 
-   ./lwm.lisp: Linear Algebra Lightweight Matrices by Victor C. It
+   **./lwm.lisp:** Linear Algebra Lightweight Matrices by Victor C. It
    complements the matrix.lisp
    
-   ./ltstats.lisp: Lightweight Statistics by Victor C. It complements
+   **./ltstats.lisp:** Lightweight Statistics by Victor C. It complements
    the statis/statis.lisp
 
-Goals:
+### Goals:
 
    - This repository brings a Mathematical Modern Library for LISP
      coders to spread this excellent, stable, and mature programming
@@ -48,11 +52,20 @@ Goals:
    - New adaptations and implementations will be remarked on the
      README.md file.
 
-Maintainer: Victor C
+### Compiling and Loading in SBCL:
 
-Examples:
+   Unpacking the zip file will create a folder called clmath-main.
+   E.g., /home/science/src/e/clmath-main/
 
-   1. Simple Legendre 4th degree Polynomials Regressor. For data
+```
+(require :asdf)
+(asdf:load-asd (merge-pathnames "clmath.asd" #P"/home/science/src/e/clmath-main/"))
+(asdf:load-system :clmath)
+```
+
+### Examples:
+
+   **1.** Simple Legendre 4th degree Polynomials Regressor. For data
       completion and predictions.
 
 ```
@@ -94,11 +107,11 @@ Examples:
   )
 ```
 
-Output:
+   Output **1.**
 
 ![Screenshot](showplots.png)
 
-   2. Histogram.
+   **2.** Histogram.
 
 ```
 (defvar ll (list 1.45	2.20	0.75	1.23	1.25
@@ -109,6 +122,6 @@ Output:
 (clmath:hist ll)
 ```
 
-Output:
+   Output **2.**
 
 ![Screenshot](hist.png)
