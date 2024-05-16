@@ -125,3 +125,135 @@
    Output **2.**
 
 ![Screenshot](hist.png)
+
+   **3.** Multiple plots. Based on [Logarithm approximation by John D. Cook.](https://www.johndcook.com/blog/2024/05/12/logarithm-approximation-error/)
+
+$$Log_{10}(x) \approx \frac{(x-1)}{(x+1)}$$
+
+$$Log_e(x) \approx \frac{2(x-1)}{(x+1)}$$
+
+$$Log_2(x) \approx \frac{3(x-1)}{(x+1)}$$
+
+```
+(let*
+    ((x (clmath:linspace 0.25 3.25 75))
+     (xl (clmath:linspace 0.6 1.6 25))
+     ;; Actual functions
+     (yA (map 'list
+	      #'(lambda(m)
+		  (log m 10))
+	      x))
+     (yE (map 'list
+	      #'(lambda(m)
+		  (log m (exp 1.0d0)))
+	      x))
+     (y2 (map 'list
+	      #'(lambda(m)
+		  (log m 2))
+	      x))
+     ;; Approximate functions
+     (yAa (map 'list
+	       #'(lambda(m)
+		   (/ (- m 1) (+ m 1)))
+	       x))
+     (yEa (map 'list
+	       #'(lambda(m)
+		   (/ (* 2 (- m 1)) (+ m 1)))
+	       x))
+     (y2a (map 'list
+	       #'(lambda(m)
+		   (/ (* 3 (- m 1)) (+ m 1)))
+	       x))
+     ;; We compute the error between actual and approximate functions
+     (yAerr (map 'list
+		 #'(lambda(m)
+		     (- (log m 10) (/ (- m 1) (+ m 1))))
+		 x))
+     (yEerr (map 'list
+		 #'(lambda(m)
+		     (- (log m (exp 1.0d0)) (/ (* 2 (- m 1)) (+ m 1))))
+		 x))
+     (y2err (map 'list
+		 #'(lambda(m)
+		     (- (log m 2) (/ (* 3 (- m 1)) (+ m 1))))
+		 x))
+     ;; We limit just Logₑ(x) and Log₂(x) domains for graphical purposes
+     (yElerr (map 'list
+		  #'(lambda(m)
+		      (- (log m (exp 1.0d0)) (/ (* 2 (- m 1)) (+ m 1))))
+		  xl))
+     (y2lerr (map 'list
+		  #'(lambda(m)
+		      (- (log m 2) (/ (* 3 (- m 1)) (+ m 1))))
+		  xl))
+     ;; We compute the relative error between actual and approximate functions
+     (yArerr (map 'list
+		  #'(lambda(m)
+		      (/ (- (log m 10) (/ (- m 1) (+ m 1))) (log m 10)))
+		  x))
+     (yErerr (map 'list
+		  #'(lambda(m)
+		      (/ (- (log m (exp 1.0d0)) (/ (* 2 (- m 1)) (+ m 1))) (log m (exp 1.0d0))))
+		  x))
+     (y2rerr (map 'list
+		  #'(lambda(m)
+		      (/ (- (log m 2) (/ (* 3 (- m 1)) (+ m 1))) (log m 2)))
+		  x))
+     )
+  ;; Plotting results
+  ;; Actual vs Approximate
+  (clmath:setplot x yA (clmath:gppal 0 "lines smooth csplines title \"log_{10}(x)\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:setplot x yE (clmath:gppal 1 "lines smooth csplines title \"log_e(x)\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:setplot x y2 (clmath:gppal 5 "lines smooth csplines title \"log_2(x)\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:setplot x yAa (clmath:gppal 8 "points title \"(x-1)/(x+1)\" ls 1")
+		  "set style line 1 pointtype 7 pointsize 0.5; set style fill solid 1.0")
+  (clmath:setplot x yEa (clmath:gppal 9 "points title \"2(x-1)/(x+1)\" ls 1")
+		  "set style line 1 pointtype 7 pointsize 0.5; set style fill solid 1.0")
+  (clmath:setplot x y2a (clmath:gppal 7 "points title \"3(x-1)/(x+1)\" ls 1")
+		  "set style line 1 pointtype 7 pointsize 0.5; set style fill solid 1.0")
+  (clmath:showplots)
+  ;; Logarithm approximation errors
+  (clmath:setplot x yAerr (clmath:gppal 0 "lines smooth csplines title \"log_{10}(x) approx error\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:setplot x yEerr (clmath:gppal 1 "lines smooth csplines title \"log_e(x) approx error\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:setplot x y2err (clmath:gppal 5 "lines smooth csplines title \"log_2(x) approx error\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:showplots)
+  ;; Logarithm approximation errors w/limited domain for visualization purposes
+  (clmath:setplot x yAerr (clmath:gppal 0 "lines smooth csplines title \"log_{10}(x) approx error\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:setplot xl yElerr (clmath:gppal 1 "lines smooth csplines title \"log_e(x) lim dom approx error\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:setplot xl y2lerr (clmath:gppal 5 "lines smooth csplines title \"log_2(x) lim dom approx error\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:showplots)
+  ;; Logarithm relative approximation errors
+  (clmath:setplot x yArerr (clmath:gppal 0 "lines smooth csplines title \"relative log_{10}(x) approx error\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:setplot x yErerr (clmath:gppal 1 "lines smooth csplines title \"relative log_e(x) approx error\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:setplot x y2rerr (clmath:gppal 5 "lines smooth csplines title \"relative log_2(x) approx error\" ls 1")
+		  "set style line 1 linewidth 2; set style fill solid 1.0")
+  (clmath:showplots)
+  )
+```
+
+   Output **3.1** Actual vs Approximate
+
+![Screenshot](logapprox.png)
+
+   Output **3.2** Logarithm approximation errors
+
+![Screenshot](logapperr.png)
+
+   Output **3.3** Logarithm approximation errors w/limited domain for visualization purposes
+
+![Screenshot](logalderr.png)
+
+   Output **3.4** Logarithm relative approximation errors
+
+![Screenshot](logareerr.png)
