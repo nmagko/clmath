@@ -59,6 +59,7 @@
    #:gppal
    #:gnuplot
    #:setplot
+   #:setplot3D
    #:showplots
    #:plotfn
    ;; lwm

@@ -257,3 +257,64 @@ $$Log_2(x) \approx \frac{3(x-1)}{(x+1)}$$
    Output **3.4** Logarithm relative approximation errors
 
 ![Screenshot](logareerr.png)
+
+   **4.** 3D Plot. The doughnut function (aka torus) is about spinning a circle around another circle. One loop goes around the hole (big circle), another loop goes around the tube (small circle)
+
+Let cR be the distance from the center of the hole to the center of the tube, and r be the radius of the tube itself (R>r for a classic donut with a hole).
+
+The coordinates (x, y, z) of any point on the surface are:
+
+$$x(u,v) = (cR + r cos v) cos u$$
+$$y(u,v) = (cR + r cos v) sin u$$
+$$z(u,v) = r sin v$$
+
+Where:
+
+- u goes from 0 to 2π (this walks you around the big central hole).
+- v goes from 0 to 2π (this walks you around the small circular tube).
+
+```
+(let*
+    ((r 6)     ;; tube radius
+     (cR 12)   ;; distance from the center
+     (ni 80)   ;; n-iterations
+     ;; (angle 0)         ;; no rotation
+     (angle (/ pi 12)) ;; 15 degrees rotation
+     ;; (angle (/ pi 6))  ;; 30 degrees rotation
+     ;; (angle (/ pi 4))  ;; 45 degrees rotation
+     ;; (angle (/ pi 2))  ;; 90 degrees rotation
+     (ul (clmath:linspace 0 (* 2 pi) ni))
+     (vl (clmath:linspace 0 (* 2 pi) ni))
+     ;; (x (* (+ cR (* r (cos v))) (cos u)))
+     (raw-x (loop for u in ul
+              append (loop for v in vl
+                           collect (* (+ cR (* r (cos v))) (cos u)))))
+     ;; (y (* (+ cR (* r (cos v))) (sin u)))
+     (raw-y (loop for u in ul
+              append (loop for v in vl
+                           collect (* (+ cR (* r (cos v))) (sin u)))))
+     ;; (z (* r (sin v)))
+     (raw-z (loop for u in ul
+              append (loop for v in vl
+                           collect (* r (sin v)))))
+     ;; Apply rotation around X-axis
+     (x raw-x)
+     (y (map 'list
+             (lambda (y z)
+               (- (* (cos angle) y) (* (sin angle) z)))
+             raw-y raw-z))
+     (z (map 'list
+             (lambda (y z)
+               (+ (* (sin angle) y) (* (cos angle) z)))
+             raw-y raw-z))
+     )
+  ;; Ploting results
+  (clmath:setplot3D x y z (clmath:gppal 0 "points pt 7 ps 0.2")
+		    "set style fill solid 1.0; set view equal xyz; set size ratio -1")
+  (clmath:showplots)
+  )
+```
+
+   Output **4.**
+
+![Screenshot](torus.png)
