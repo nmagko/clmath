@@ -162,6 +162,9 @@
    #:fib-slow
    #:fib
    #:fib-binet
+   ;; descartes
+   #:descartes
+   #:descartes-3d
    ;; mod
    #:gcd-extended
    #:modinv
