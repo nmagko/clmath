@@ -40,6 +40,8 @@
    **./ltstats.lisp:** Lightweight Statistics by Victor C. It complements
    the statis/statis.lisp
 
+   **./number/descartes.lisp:** Descartes' Theorem by Victor C
+
 ### Goals:
 
    - This repository brings a Mathematical Modern Library for LISP
