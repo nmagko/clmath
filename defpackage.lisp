@@ -60,6 +60,8 @@
    #:gnuplot
    #:setplot
    #:setplot3D
+   #:setplotwr
+   #:setplot3Dwr
    #:showplots
    #:plotfn
    ;; lwm
@@ -164,7 +166,10 @@
    #:fib-binet
    ;; descartes
    #:descartes
+   #:descartes-2d
    #:descartes-3d
+   #:descartes-3d-5th
+   #:descartes-3d-6th
    ;; mod
    #:gcd-extended
    #:modinv

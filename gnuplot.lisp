@@ -13,7 +13,7 @@
 ;; Self-documented in the comments with examples.
 
 ;; system variables
-(defvar *gnuplot-cache-path* "/dev/shm")
+(defvar *gnuplot-cache-path* "/tmp") ;; /dev/shm
 (defvar *gnuplot-cache-name* "")
 (defvar *gnuplot-cache-stat* nil)
 (defvar *gnuplot-cache-show* "")
@@ -84,11 +84,15 @@
      ))
    ))
 
-;; The setplot function works exactly like the gnuplot function but don't
-;; show any plot. You have to call the showplots function to show the plots.
-;; With the setplot function you can stack multiple plots to be shown later
-;; with showplots.
+;; The setplot function works exactly like the gnuplot function, but it
+;; doesn't show any plot. You have to call the showplots function to show
+;; the plots. With the setplot function, you can stack multiple plots to be
+;; shown later with showplots.
 (defun setplot (X Y &optional (TYPE "boxes") (SCRIPT "") (LIMIT ""))
+  "The setplot function works exactly like the gnuplot function, but it
+   doesn't show any plot. You have to call the showplots function to show
+   the plots. With the setplot function, you can stack multiple plots to be
+   shown later with showplots."
   (declare (optimize (speed 3) (safety 0)))
   (setq *gnuplot-cache-name*
 	(concatenate 'string *gnuplot-cache-path* "/gnuplot-" (write-to-string (+ 1000 (random 9000))) ".dat"))
@@ -128,6 +132,12 @@
 
 ;; The setplot3D function is the same as setplot but for 3D data.
 (defun setplot3D (X Y Z &optional (TYPE "boxes") (SCRIPT "") (LIMIT ""))
+  "The setplot3D function is the same as setplot but for 3D data. E.g.
+   (clmath:setplot3D
+    (list 1 2 3 4 5 6 7 8 9 10 11 12)
+    (list 10 11 12 13 14 15 16 17 18 19 20 21)
+    (list 0.8 3 5 1 2 1 1 7 0.9 4 1 0.7)
+    \"boxes\" \"set boxdepth 0.8; set pm3d depthorder base\")"
   (declare (optimize (speed 3) (safety 0)))
   (setq *gnuplot-cache-name*
 	(concatenate 'string *gnuplot-cache-path* "/gnuplot-" (write-to-string (+ 1000 (random 9000))) ".dat"))
@@ -165,8 +175,95 @@
       (setq *gnuplot-cache-stat* t))
   )
 
-;; The function showplots show the plots previously defined by setplot.
+;; The setplotwr function is the same as setplot, but for X, Y coordinates,
+;; and R (circle radius) data.
+(defun setplotwr (X Y R &optional (TYPE "circles") (SCRIPT "set style fill transparent solid 0.2") (LIMIT ""))
+  "The setplotwr function is the same as setplot, but for X, Y coordinates,
+   and R (circle radius) data."
+  (declare (optimize (speed 3) (safety 0)))
+  (setq *gnuplot-cache-name*
+	(concatenate 'string *gnuplot-cache-path* "/gnuplot-" (write-to-string (+ 1000 (random 9000))) ".dat"))
+  (let ((s (open *gnuplot-cache-name* :direction :output
+                 :if-exists :supersede :if-does-not-exist :create)))
+    (do ((i 0 (+ i 1)))
+	((= i (list-length X)) t)
+      (write-line (format nil "~f ~f ~f" (nth i X) (nth i Y) (nth i R)) s))
+    (close s))
+  (if (not *gnuplot-cache-stat*)
+      (setq *gnuplot-cache-show*
+	    (concatenate 'string *gnuplot-cache-path* "/gnuplot-" (write-to-string (+ 1000 (random 9000))) ".plt")))
+  (let ((s (open *gnuplot-cache-show* :direction :output
+                 :if-exists :append :if-does-not-exist :create)))
+    (write-line
+     (format
+      nil "~{~a~^ ~}"
+      (list
+       SCRIPT ";"
+       (if (string= LIMIT "")
+	   "" "gpllrf(x,x0,x1)=(x0<=x&&x<=x1)?x:NaN;")
+       (if *gnuplot-cache-stat*
+	   "replot" "plot")
+       (concatenate 'string "\"" *gnuplot-cache-name* "\"") "using"
+       (if (string= LIMIT "")
+	   "1:2:3" (concatenate 'string "(gpllrf($1," LIMIT ")):3"))
+       "with" TYPE
+       ;; (if (string= LIMIT "")
+       ;; 	   "" "notitle, \"\" using 1:2 with lines")
+       "notitle"
+       ))
+     s)
+    (close s))
+  (if (not *gnuplot-cache-stat*)
+      (setq *gnuplot-cache-stat* t))
+  )
+
+;; The setplot3Dwr function is the same as setplot, but for X, Y, Z
+;; coordinates, and R (circle radius) data.
+(defun setplot3Dwr (X Y Z R &optional (TYPE "circles") (SCRIPT "set style fill transparent solid 0.2") (LIMIT ""))
+  "The setplot3Dwr function is the same as setplot, but for X, Y, Z
+   coordinates, and R (circle radius) data."
+  (declare (optimize (speed 3) (safety 0)))
+  (setq *gnuplot-cache-name*
+	(concatenate 'string *gnuplot-cache-path* "/gnuplot-" (write-to-string (+ 1000 (random 9000))) ".dat"))
+  (let ((s (open *gnuplot-cache-name* :direction :output
+                 :if-exists :supersede :if-does-not-exist :create)))
+    (do ((i 0 (+ i 1)))
+	((= i (list-length X)) t)
+      (write-line (format nil "~f ~f ~f ~f" (nth i X) (nth i Y) (nth i Z) (nth i R)) s))
+    (close s))
+  (if (not *gnuplot-cache-stat*)
+      (setq *gnuplot-cache-show*
+	    (concatenate 'string *gnuplot-cache-path* "/gnuplot-" (write-to-string (+ 1000 (random 9000))) ".plt")))
+  (let ((s (open *gnuplot-cache-show* :direction :output
+                 :if-exists :append :if-does-not-exist :create)))
+    (write-line
+     (format
+      nil "~{~a~^ ~}"
+      (list
+       SCRIPT ";"
+       (if (string= LIMIT "")
+	   "" "gpllrf(x,x0,x1)=(x0<=x&&x<=x1)?x:NaN;")
+       (if *gnuplot-cache-stat*
+	   "replot" "splot")
+       (concatenate 'string "\"" *gnuplot-cache-name* "\"") "using"
+       (if (string= LIMIT "")
+	   "1:2:3:4" (concatenate 'string "(gpllrf($1," LIMIT ")):4"))
+       "with" TYPE
+       ;; (if (string= LIMIT "")
+       ;; 	   "" "notitle, \"\" using 1:2 with lines")
+       "notitle"
+       ))
+     s)
+    (close s))
+  (if (not *gnuplot-cache-stat*)
+      (setq *gnuplot-cache-stat* t))
+  )
+
+;; The function showplots shows the plots previously defined by the setplot
+;; functions.
 (defun showplots ()
+  "The function showplots shows the plots previously defined by the setplot
+   functions."
   (if *gnuplot-cache-stat*
       (setq *gnuplot-cache-stat* nil))
   (uiop:run-program

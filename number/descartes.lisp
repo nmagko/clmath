@@ -34,11 +34,24 @@
 
 ;; -- CIRCLES 2D --
 (defun descartes (b1 b2 b3)
-  "Solve for the two possible curvatures (b4) given
-   three mutually tangent ones."
-  (let ((s (+ b1 b2 b3))
-        (r (* 2 (sqrt (+ (* b1 b2) (* b1 b3) (* b2 b3))))))
-    (values (+ s r) (- s r))))
+  "Solve for the two possible 4th curvatures in 2D.
+   Returns: b4a, b4b"
+  (let* ((sum (+ b1 b2 b3))
+         (sum-sq (expt sum 2))
+         (sum-sq-squares (+ (expt b1 2) (expt b2 2) (expt b3 2)))
+         ;; (b1+b2+b3+b4)^2 = 2*(b1^2+b2^2+b3^2+b4^2)
+         ;; b4^2 - 2*sum*b4 + (2*sum_squares - sum^2) = 0
+         (a 1.0)
+         (b (* -2.0 sum))
+         (c (- (* 2.0 sum-sq-squares) sum-sq)))
+    (let ((discriminant (- (* b b) (* 4 a c))))
+      (if (>= discriminant 0)
+          (let ((sqrt-disc (sqrt (max 0 discriminant))))  ; Guard against tiny negatives
+            (values (/ (- (- b) sqrt-disc) (* 2 a))
+                    (/ (+ (- b) sqrt-disc) (* 2 a))))
+          (values nil nil)))))
+
+(setf (fdefinition 'descartes-2d) #'descartes)
 
 ;; -- SPHERES 3D --
 ;; The 3D Descartes-Gossett theorem:
@@ -46,20 +59,43 @@
 ;; Rearranged for b₅: 
 ;;     3 · (sum + b₅)² = sum_squares + b₅²
 ;;     2 · b₅² + 6 · sum · b₅ + (3 · sum² - sum_squares) = 0
-(defun descartes-3d (b1 b2 b3 b4)
+(defun descartes-3d-5th (b1 b2 b3 b4)
   "Solve for the two possible 5th curvatures in 3D.
-   Returns two values: b5a and b5b."
+   Returns: b5a, b5b"
   (let* ((sum (+ b1 b2 b3 b4))
          (sum-sq (expt sum 2))
          (sum-sq-squares (+ (expt b1 2) (expt b2 2) 
                             (expt b3 2) (expt b4 2)))
+         ;; 3*(b1+b2+b3+b4+b5)^2 = b1^2+b2^2+b3^2+b4^2+b5^2
+         ;; 2*b5^2 + 6*sum*b5 + (3*sum^2 - sum_squares) = 0
          (a 2.0)
          (b (* 6.0 sum))
-         (c (- (* 3.0 sum-sq) sum-sq-squares))
-         (discriminant (- (expt b 2) (* 4 a c))))
-    ;; Return the two roots
-    (if (>= discriminant 0)
-        (let ((sqrt-disc (sqrt discriminant)))
-          (values (/ (- (- b) sqrt-disc) (* 2 a))
-                  (/ (+ (- b) sqrt-disc) (* 2 a))))
-        (error "No real solution for these curvatures"))))
+         (c (- (* 3.0 sum-sq) sum-sq-squares)))
+    (let ((discriminant (- (* b b) (* 4 a c))))
+      (if (>= discriminant 0)
+          (let ((sqrt-disc (sqrt discriminant)))
+            (values (/ (- (- b) sqrt-disc) (* 2 a))
+                    (/ (+ (- b) sqrt-disc) (* 2 a))))
+          (values nil nil)))))
+
+(setf (fdefinition 'descartes-3d) #'descartes-3d-5th)
+
+(defun descartes-3d-6th (b1 b2 b3 b4 b5)
+  "Solve for the two possible 6th curvatures in 3D.
+   Returns: b6a, b6b"
+  (let* ((sum (+ b1 b2 b3 b4 b5))
+         (sum-sq (expt sum 2))
+         (sum-sq-squares (+ (expt b1 2) (expt b2 2) 
+                            (expt b3 2) (expt b4 2)
+                            (expt b5 2)))
+         ;; 3*(b1+b2+b3+b4+b5+b6)^2 = b1^2+b2^2+b3^2+b4^2+b5^2+b6^2
+         ;; 2*b6^2 + 6*sum*b6 + (3*sum^2 - sum_squares) = 0
+         (a 2.0)
+         (b (* 6.0 sum))
+         (c (- (* 3.0 sum-sq) sum-sq-squares)))
+    (let ((discriminant (- (* b b) (* 4 a c))))
+      (if (>= discriminant 0)
+          (let ((sqrt-disc (sqrt discriminant)))
+            (values (/ (- (- b) sqrt-disc) (* 2 a))
+                    (/ (+ (- b) sqrt-disc) (* 2 a))))
+          (values nil nil)))))
