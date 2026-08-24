@@ -116,8 +116,11 @@
       ((<= l 0) bits)
     (declare (fixnum l k))
     (setq k (min l 20.))
-    (setq bits (+ (* bits (lsh 1 k))		; shift left k bits
-		  (random (lsh 1 k))))		; add in k bits
+    ;; Updating the old lsh dialect function to the standard ash
+    ;; (setq bits (+ (* bits (lsh 1 k))		; shift left k bits
+    ;; 		  (random (lsh 1 k))))		; add in k bits
+    (setq bits (+ (* bits (ash 1 k))		; shift left k bits
+		  (random (ash 1 k))))		; add in k bits
     ))
 
 ;;; Common Lisp has this function internally
