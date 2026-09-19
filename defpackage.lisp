@@ -2,7 +2,7 @@
 
 (defpackage :clmath
   (:use :cl :uiop)
-  (:export 
+  (:export
    ;; consts
    #:velocity-of-light
    #:electronic-charge
@@ -32,7 +32,7 @@
    #:matrix-identity
    #:matrix-copy
    #:matrix-diagonal
-   #:matrix-add 
+   #:matrix-add
    #:matrix-sub
    #:matrix-solve-triangle-lower
    #:matrix-solve-triangle-upper
@@ -76,6 +76,14 @@
    #:cosang
    #:cspl-to-diagmat
    #:lstsq
+   ;; gauss-jordan elimination
+   #:vmul
+   #:vsum
+   #:zlmn
+   #:simplify
+   #:gauss
+   #:jordan
+   #:gauss-jordan
    ;; ltstats
    #:mean
    #:medn
@@ -88,22 +96,22 @@
    #:hist
    ;; FUNCTIONS:
    ;; basic
-					;#:fraction 
-					;#:entier 
-					;#:square-root 
+                                        ;#:fraction
+                                        ;#:entier
+                                        ;#:square-root
    ;; bessel
    #:bessel-j
    #:bessel-i
-   ;; beta 
+   ;; beta
    #:beta-function-naive
-   #:log-beta-function 
+   #:log-beta-function
    #:beta-function
    #:beta-warning
    #:betacf
    #:betai
-   ;; ellip 
+   ;; ellip
    #:elliptic-integral-k
-   #:elliptic-integral-kC 
+   #:elliptic-integral-kC
    #:elliptic-integral-e
    ;; erf
    #:erfc
@@ -120,8 +128,8 @@
    #:gamma-stirling
    #:gammln
    #:fgammln
-   #:gamma-function 
-   #:log-gamma-function 
+   #:gamma-function
+   #:log-gamma-function
    #:gamma-function-reciprocal
    ;; INTEGRATE:
    ;; integr
@@ -186,7 +194,7 @@
    #:fit-fcn
    #:fit
    ;; fmfp
-					;#:fmfp
+                                        ;#:fmfp
    ;; marq
    #:marquardt
    ;; regres

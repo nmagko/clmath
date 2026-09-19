@@ -111,7 +111,7 @@
 
    Output **1.**
 
-![Screenshot](showplots.png)
+![Alt Plots](img/showplots.png)
 
    **2.** Histogram.
 
@@ -126,7 +126,7 @@
 
    Output **2.**
 
-![Screenshot](hist.png)
+![Alt Histogram](img/hist.png)
 
    **3.** Multiple plots. Based on [Logarithm approximation by John D. Cook.](https://www.johndcook.com/blog/2024/05/12/logarithm-approximation-error/)
 
@@ -246,19 +246,19 @@ $$Log_2(x) \approx \frac{3(x-1)}{(x+1)}$$
 
    Output **3.1** Actual vs Approximate
 
-![Screenshot](logapprox.png)
+![Alt Logarithm_approximation](img/logapprox.png)
 
    Output **3.2** Logarithm approximation errors
 
-![Screenshot](logapperr.png)
+![Alt Logarithm_approximation_errors](img/logapperr.png)
 
    Output **3.3** Logarithm approximation errors w/limited domain for visualization purposes
 
-![Screenshot](logalderr.png)
+![Alt Logarithm_approximation_errors_limdom](img/logalderr.png)
 
    Output **3.4** Logarithm relative approximation errors
 
-![Screenshot](logareerr.png)
+![Alt Logarithm_relative_approximation_errors](img/logareerr.png)
 
    **4.** 3D Plot. The doughnut function (aka torus) is about spinning a circle around another circle. One loop goes around the hole (big circle), another loop goes around the tube (small circle)
 
@@ -319,4 +319,4 @@ Where:
 
    Output **4.**
 
-![Screenshot](torus.png)
+![Alt Torus](img/torus.png)
