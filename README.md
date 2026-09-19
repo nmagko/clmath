@@ -6,7 +6,7 @@
 
 **Author(s):** Gerald Roylance
 
-**Adapted for:** SBCL 2.4.4
+**Adapted for:** SBCL 2.4.4 and later
 
 **Maintainer:** Victor C
 
