@@ -25,6 +25,9 @@
    **./functions/gamma.lisp:** double-float compatibility for new SBCL
    versions
 
+   **./number/mod.lisp‎:** updating the old LSH dialect function to the
+   standard ASH
+
 ### Adaptations:
 
    **./quad-ga.lisp:** Gaussian Quadrature with Legendre polynomials by
@@ -41,6 +44,8 @@
    the statis/statis.lisp
 
    **./number/descartes.lisp:** Descartes' Theorem by Victor C
+
+   **./gauss.lisp:** Gauss-Jordan Elimination by Victor C
 
 ### Goals:
 
