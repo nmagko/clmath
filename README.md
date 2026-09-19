@@ -4,11 +4,11 @@
 
 **Name:** CLMATH
 
-**Author(s):** Gerald Roylance
+**Author(s):**
+  - **Original Author:** Gerald Roylance
+  - **Current Author:** Victor "nmagko" C
 
 **Adapted for:** SBCL 2.4.4 and later
-
-**Maintainer:** Victor C
 
 ### Brief:
 
